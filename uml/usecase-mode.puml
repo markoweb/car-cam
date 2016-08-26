@@ -1,0 +1,35 @@
+@startuml
+
+title Use Case Diagram - Mode Selection
+
+:user:
+
+(push the state button) as (btn)
+
+user --> (btn)
+
+(auto)
+(front\ncamera) as (frontOn)
+(rear\ncamera) as (rearOn)
+(off)
+
+(btn) --> (auto)
+(btn) --> (frontOn)
+(btn) --> (rearOn)
+(btn) --> (off)
+
+note left of auto: Activate auto mode
+
+(front camera) as (frontCam)
+(rear camera) as (rearCam)
+
+(frontOn) --> (rearCam) : off
+(frontOn) --> (frontCam) : on
+
+(rearOn) --> (frontCam) : off
+(rearOn) --> (rearCam) : on
+
+(off) --> (frontCam) : off
+(off) --> (rearCam) : off
+
+@enduml

@@ -1,0 +1,40 @@
+@startuml
+
+title Activity Diagram 
+
+start
+
+:mainState = auto;
+:frontState = false;
+:rearState = false;
+
+repeat
+
+:checkBtn();
+
+if (mainState == auto) then (true)
+    if (reverseBtn == HIGH) then (true)
+        if (reverseState == true) then (true)
+        else (false)
+            :frontCamOff();
+            :rearCamOn();
+        endif;
+    else (false)
+        if (reverseState == true) then (true)
+            :rearCamOff();
+            :frontCamOn();
+            :duration = 0;
+        else (false)
+            if (frontState == true) then (true)
+                if (duration < delay) then (true)
+                    :duration++;
+                else (false)
+                    :frontCamOff();
+                endif;
+            endif;
+        endif;
+    endif;
+else (false)
+endif;
+
+@enduml

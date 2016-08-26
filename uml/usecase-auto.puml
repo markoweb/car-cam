@@ -1,0 +1,24 @@
+@startuml
+
+title Use Case Diagram - Auto Mode
+
+:user:
+
+(turn on reverse gear) as (revOn)
+(turn off reverse gear) as (revOff)
+
+user --> (revOn)
+user --> (revOff)
+
+(front camera) as (frontCam)
+(rear camera) as (rearCam)
+
+(revOn) ---> (frontCam) : off
+(revOn) ---> (rearCam) : on
+
+(revOff) ---> (rearCam) : off
+(revOff) ---> (frontCam) : timer
+
+note left of revOff: This will set a timer\nfor the front camera
+
+@enduml
