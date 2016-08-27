@@ -1,6 +1,6 @@
 /**
  * Car Camera Controller software for Arduino Digispark device
- * 
+ *
  * @author Matus Marko
  * @email  matus@markoweb.eu
  * @gitlab https://github.com/markoweb/car-cam
@@ -18,7 +18,7 @@ const int frontCameraPin = 1;
 const int ctrl1 = 2;
 
 // pin for controll button (input)
-const int ctrl2 = 3;
+const int ctrl2 = 4;
 
 /* STATE CONFIGURATION */
 
@@ -32,9 +32,9 @@ bool frontCamState = false;
 bool rearCamState = false;
 
 // delay for front camera
-const int frontCamDelay = 160;
+const unsigned int frontCamDelay = 1300;
 
-int frontCamDuration = 0;
+unsigned int frontCamDuration = 0;
 //const int delayLoop = 50;
 
 void setup() {
@@ -52,7 +52,7 @@ void loop() {
 
   // if mode was set to auto
   if (mode == 0) {
-  
+
     // read the state of the reverse gear
     int reverseBtn = digitalRead(ctrl1);
 
@@ -61,7 +61,7 @@ void loop() {
       // previous rear cam state is off
       if (!rearCamState) {
         frontCamOff();
-        rearCamOn();  
+        rearCamOn();
       }
     }
     // reverse gear is off
@@ -78,7 +78,7 @@ void loop() {
         if (frontCamState) {
           // front camera is on within the duration time
           if (frontCamDuration <= frontCamDelay) {
-            frontCamDuration++;
+            ++frontCamDuration;
           }
           // front camera duration is out of time
           else {
@@ -88,6 +88,7 @@ void loop() {
       }
     }
   }
+  delay(5);
 }
 
 /** Turn on front camera */
@@ -121,7 +122,6 @@ void changeMode() {
   switch (mode) {
     // auto mode
     case 0:
-      return;
       break;
     // front camera on
     case 1:
@@ -139,5 +139,6 @@ void changeMode() {
       rearCamOff();
       break;
   }
+  delay(500);
 }
 
