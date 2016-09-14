@@ -9,16 +9,16 @@
 /* PIN CONFIGURATION */
 
 // rear camera controll pin (output)
-const int rearCameraPin = 0;
+const int rearCameraPin = 3;
 
 // front camera controll pin (output)
-const int frontCameraPin = 1;
+const int frontCameraPin = 4;
 
 // pin for reverse gear (input)
-const int ctrl1 = 2;
+const int ctrl1 = 1;
 
 // pin for controll button (input)
-const int ctrl2 = 4;
+const int ctrl2 = 2;
 
 /* STATE CONFIGURATION */
 
