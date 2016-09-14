@@ -32,7 +32,7 @@ bool frontCamState = false;
 bool rearCamState = false;
 
 // delay for front camera
-const unsigned int frontCamDelay = 1300;
+const unsigned int frontCamDelay = 1500;
 
 unsigned int frontCamDuration = 0;
 //const int delayLoop = 50;
@@ -139,6 +139,9 @@ void changeMode() {
       rearCamOff();
       break;
   }
-  delay(500);
+  while (true) {
+    if (digitalRead(ctrl2) == LOW)
+      break;
+  }
 }
 
