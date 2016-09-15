@@ -35,13 +35,14 @@ bool rearCamState = false;
 const unsigned int frontCamDelay = 1500;
 
 unsigned int frontCamDuration = 0;
-//const int delayLoop = 50;
 
 void setup() {
   pinMode(ctrl1, INPUT);
   pinMode(ctrl2, INPUT);
   pinMode(frontCameraPin, OUTPUT);
   pinMode(rearCameraPin, OUTPUT);
+
+  frontCamOn();
 }
 
 void loop() {
