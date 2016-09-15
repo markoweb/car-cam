@@ -32,7 +32,7 @@ bool frontCamState = false;
 bool rearCamState = false;
 
 // delay for front camera
-const unsigned int frontCamDelay = 1500;
+const unsigned int frontCamDelay = 2500;
 
 unsigned int frontCamDuration = 0;
 
