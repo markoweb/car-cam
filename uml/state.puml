@@ -1,0 +1,35 @@
+@startuml
+
+title Camera Controller State Diagram
+
+state idle
+idle : front cam. off
+idle : rear cam. off
+
+state "Front cam. on" as frontDelay
+frontDelay : delay
+frontDelay : rear cam. off
+
+state "Rear cam. on" as rearDelay
+rearDelay : delay
+rearDelay : front off
+
+state "Rear cam. on" as rearOn
+rearOn : front off
+
+[*] --> frontDelay
+
+frontDelay -> rearDelay : button pressed
+frontDelay --> idle : after delay
+frontDelay -left-> rearOn : reverse gear set
+
+idle -> idle : waiting for input
+idle --> rearOn : reverse gear set
+idle --> frontDelay : button pressed
+
+rearOn -> frontDelay : reverse gear unset
+rearOn -> frontDelay : button pressed
+
+rearDelay --> idle : after delay
+
+@enduml
