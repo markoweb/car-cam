@@ -1,0 +1,20 @@
+@startuml
+
+left to right direction
+
+actor User
+
+rectangle Reversing {
+    User --> (View rear camera)
+    (View front camera\nwith timer) as front2
+    User --> front2
+}
+
+rectangle Driving {
+    (View rear camera\nwith timer) as front1
+    User -left-> (View front camera\nwith timer)
+    User -left-> front1
+    User -left-> (Turn off both)
+}
+
+@enduml
