@@ -1,40 +1,71 @@
 @startuml
 
-title Activity Diagram 
-
 start
 
-:mainState = auto;
-:frontState = false;
-:rearState = false;
+:state = 1
+timeout = ~10s;
 
 repeat
 
-:checkBtn();
-
-if (mainState == auto) then (true)
-    if (reverseBtn == HIGH) then (true)
-        if (reverseState == true) then (true)
-        else (false)
-            :frontCamOff();
-            :rearCamOn();
+if (reverse gear) then (set)
+note: Handle reverse gear changes
+    if (state < 3) then
+        :state = 3;
+        :frontCamOff()
+        rearCamOn();
+    else if (state = 4) then
+        if (duration < timeout) then
+            :duration++;
+        else
+            :state = 3;
+            :frontCamOff()
+            rearCamOn();
         endif;
-    else (false)
-        if (reverseState == true) then (true)
-            :rearCamOff();
-            :frontCamOn();
-            :duration = 0;
-        else (false)
-            if (frontState == true) then (true)
-                if (duration < delay) then (true)
-                    :duration++;
-                else (false)
-                    :frontCamOff();
-                endif;
-            endif;
-        endif;
+    else
     endif;
-else (false)
+else (unset)
+    if (state = 1 OR state = 2) then
+        if (duration < timeout) then
+            :duration++;
+        else
+            :state = 0;
+            :rearCamOff()
+            frontCamOff();
+        endif;
+    else if (state > 2) then
+        :status = 1;
+        :rearCamOff()
+        frontCamOn();
+        :duration = 0;
+    endif;
 endif;
 
+if (button pressed) then (true)
+note: Handle button changes
+    if (state = 0) then
+        :state = 1;
+        :rearCamOff()
+        frontCamOn();
+        :duration = 0;
+    else if (state = 1) then
+        :state = 2;
+        :frontCamOff()
+        rearCamOn();
+        :duration = 0;
+    else if (state = 2) then
+        :state = 0;
+        :frontCamOff()
+        rearCamOff();
+    else if (state = 3)
+        :state = 4;
+        :rearCamOff()
+        frontCamOn();
+        :duration = 0;
+    else
+        :state = 3;
+        :frontCamOff()
+        rearCamOn;
+    endif
+else (false)
+endif
 @enduml
