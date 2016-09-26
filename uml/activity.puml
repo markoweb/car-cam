@@ -2,24 +2,19 @@
 
 start
 
-:state = 1
-timeout = ~10s;
+:timeout = ~10s;
 
 repeat
 
 if (reverse gear) then (set)
 note: Handle reverse gear changes
     if (state < 3) then
-        :state = 3;
-        :frontCamOff()
-        rearCamOn();
+        :set state 3;
     else if (state = 4) then
         if (duration < timeout) then
             :duration++;
         else
-            :state = 3;
-            :frontCamOff()
-            rearCamOn();
+            :set state 3;
         endif;
     else
     endif;
@@ -28,43 +23,25 @@ else (unset)
         if (duration < timeout) then
             :duration++;
         else
-            :state = 0;
-            :rearCamOff()
-            frontCamOff();
+            :set state 0;
         endif;
     else if (state > 2) then
-        :status = 1;
-        :rearCamOff()
-        frontCamOn();
-        :duration = 0;
+        :set state 1;
     endif;
 endif;
 
 if (button pressed) then (true)
 note: Handle button changes
     if (state = 0) then
-        :state = 1;
-        :rearCamOff()
-        frontCamOn();
-        :duration = 0;
+        :set state 1;
     else if (state = 1) then
-        :state = 2;
-        :frontCamOff()
-        rearCamOn();
-        :duration = 0;
+        :set state 2;
     else if (state = 2) then
-        :state = 0;
-        :frontCamOff()
-        rearCamOff();
-    else if (state = 3)
-        :state = 4;
-        :rearCamOff()
-        frontCamOn();
-        :duration = 0;
+        :set state 0;
+    else if (state = 3) then
+        :set state 4;
     else
-        :state = 3;
-        :frontCamOff()
-        rearCamOn;
+        :set state 3;
     endif
 else (false)
 endif
