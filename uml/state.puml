@@ -1,26 +1,33 @@
 @startuml
 
-title Camera Controller State Diagram
-
 state idle
+idle : state 0
 idle : front cam. off
 idle : rear cam. off
 
-state "Front cam. on" as frontTimer
-frontTimer : timer
+state frontTimer
+frontTimer : state 1
+frontTimer : front cam. on
 frontTimer : rear cam. off
+frontTimer : timer
 
-state "Rear cam. on" as rearTimer
-rearTimer : timer
+state rearTimer
+rearTimer : state 2
 rearTimer : front cam. off
+rearTimer : rear cam. on
+rearTimer : timer
 
-state "Reversing" as reversing {
-    state "Rear cam. on" as reversingRearOn
-    reversingRearOn : front off
+state reversing {
+    state reversingRearOn
+    reversingRearOn : state 3
+    reversingRearOn : front cam. off
+    reversingRearOn : rear cam. on
 
-    state "Front cam. on" as reveringFrontTimer
-    reveringFrontTimer : timer
+    state reveringFrontTimer
+    reveringFrontTimer : state 4
+    reveringFrontTimer : front cam. on
     reveringFrontTimer : rear cam. off
+    reveringFrontTimer : timer
 
     [*] --> reversingRearOn
     reversingRearOn -> reveringFrontTimer : button pressed
