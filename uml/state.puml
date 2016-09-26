@@ -6,30 +6,43 @@ state idle
 idle : front cam. off
 idle : rear cam. off
 
-state "Front cam. on" as frontDelay
-frontDelay : delay
-frontDelay : rear cam. off
+state "Front cam. on" as frontTimer
+frontTimer : timer
+frontTimer : rear cam. off
 
-state "Rear cam. on" as rearDelay
-rearDelay : delay
-rearDelay : front off
+state "Rear cam. on" as rearTimer
+rearTimer : timer
+rearTimer : front cam. off
 
-state "Rear cam. on" as rearOn
-rearOn : front off
+state "Reversing" as reversing {
+    state "Rear cam. on" as reversingRearOn
+    reversingRearOn : front off
 
-[*] --> frontDelay
+    state "Front cam. on" as reveringFrontTimer
+    reveringFrontTimer : timer
+    reveringFrontTimer : rear cam. off
 
-frontDelay -> rearDelay : button pressed
-frontDelay --> idle : after delay
-frontDelay -left-> rearOn : reverse gear set
+    [*] --> reversingRearOn
+    reversingRearOn -> reveringFrontTimer : button pressed
+    reveringFrontTimer -> reversingRearOn : timer timeout
+    reveringFrontTimer -> reversingRearOn : button pressed
+    reversingRearOn --> [*]
+}
+
+[*] --> frontTimer
+
+frontTimer --> idle : timer timeout
+frontTimer -left-> rearTimer : button pressed
+frontTimer -> reversing : reverse gear set
 
 idle -> idle : waiting for input
-idle --> rearOn : reverse gear set
-idle --> frontDelay : button pressed
+idle --> reversing : reverse gear set
+idle --> frontTimer : button pressed
 
-rearOn -> frontDelay : reverse gear unset
-rearOn -> frontDelay : button pressed
+rearTimer --> idle : timer timeout
+rearTimer --> idle : button pressed
+rearTimer --> reversing : reverse gear set
 
-rearDelay --> idle : after delay
 
+reversing -> frontTimer : reverse gear unset
 @enduml
