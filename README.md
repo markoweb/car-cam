@@ -4,11 +4,10 @@ Hardware part of the controller will be implemented by digispark.
 ## UML diagrams
 
 ### Use Case Diagrams
-![usecase mode selection](/images/usecase-mode.png)
-![usecase mode selection](/images/usecase-auto.png)
+![usecase diagram](/images/usecase.png)
 
-### Activity Diagram
-![usecase mode selection](/images/activity.png)
+### State diagram
+![state diagram](/images/state.png)
 
 ### DIGISPARK pinout analyze
 #### OUTPUT 
