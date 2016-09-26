@@ -23,16 +23,16 @@ state reversing {
     reversingRearOn : front cam. off
     reversingRearOn : rear cam. on
 
-    state reveringFrontTimer
-    reveringFrontTimer : state 4
-    reveringFrontTimer : front cam. on
-    reveringFrontTimer : rear cam. off
-    reveringFrontTimer : timer
+    state reversingFrontTimer
+    reversingFrontTimer : state 4
+    reversingFrontTimer : front cam. on
+    reversingFrontTimer : rear cam. off
+    reversingFrontTimer : timer
 
     [*] --> reversingRearOn
-    reversingRearOn -> reveringFrontTimer : button pressed
-    reveringFrontTimer -> reversingRearOn : timer timeout
-    reveringFrontTimer -> reversingRearOn : button pressed
+    reversingRearOn -> reversingFrontTimer : button pressed
+    reversingFrontTimer -> reversingRearOn : timer timeout
+    reversingFrontTimer -> reversingRearOn : button pressed
     reversingRearOn --> [*]
 }
 
