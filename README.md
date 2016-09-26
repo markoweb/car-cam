@@ -9,6 +9,9 @@ Hardware part of the controller will be implemented by digispark.
 ### State diagram
 ![state diagram](/images/state.png)
 
+### Activity diagram
+![activity diagram](/images/activity.png)
+
 ### DIGISPARK pinout analyze
 #### OUTPUT 
 - P1~P4: OK
