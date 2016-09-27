@@ -49,7 +49,7 @@ void loop() {
     if (state < 3) {
       setState(3);
     }
-    else if (state = 4) {
+    else if (state == 4) {
       if (duration < TIMEOUT) {
         duration++;
       } else {
@@ -108,11 +108,11 @@ void setState(int number) {
       frontCamOn();
       duration = 0;
       break;
+    case 2:
+      duration = 0;
     case 3:
       frontCamOff();
       rearCamOn();
-    case 2:
-      duration = 0;
       break;
     case 0:
     default:
