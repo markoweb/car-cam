@@ -1,11 +1,13 @@
 /**
  * Car Camera Controller software for Arduino Digispark device
  *
- * @author Matus Marko
- * @email  matus@markoweb.eu
- * @gitlab https://github.com/markoweb/car-cam
+ * @author  Matus Marko
+ * @email   matus@markoweb.eu
+ * @gitlab  https://github.com/markoweb/car-cam
+ * @version 3.0.1
  */
 
+ 
 /* PIN CONFIGURATION */
 
 // rear camera controll pin (output)
@@ -20,21 +22,17 @@ const int ctrl1 = 1;
 // pin for controll button (input)
 const int ctrl2 = 2;
 
+
 /* STATE CONFIGURATION */
 
-// mode
-int mode = 0;
-
-// front camera state
-bool frontCamState = false;
-
-// rear camera state
-bool rearCamState = false;
-
 // delay for front camera
-const unsigned int frontCamDelay = 2500;
+const unsigned int TIMEOUT = 2500;
 
-unsigned int frontCamDuration = 0;
+// current state
+int state;
+
+// current duration
+unsigned int duration;
 
 void setup() {
   pinMode(ctrl1, INPUT);
@@ -42,107 +40,115 @@ void setup() {
   pinMode(frontCameraPin, OUTPUT);
   pinMode(rearCameraPin, OUTPUT);
 
-  frontCamOn();
+  setState(1);
 }
 
 void loop() {
-  // check whether the control button was pressed
-  if (digitalRead(ctrl2) == HIGH) {
-    changeMode();
-  }
-
-  // if mode was set to auto
-  if (mode == 0) {
-
-    // read the state of the reverse gear
-    int reverseBtn = digitalRead(ctrl1);
-
-    // reverse gear is on
-    if (reverseBtn == HIGH) {
-      // previous rear cam state is off
-      if (!rearCamState) {
-        frontCamOff();
-        rearCamOn();
+  // check whether the reverse gear is set
+  if (isReversingSet()) {
+    if (state < 3) {
+      setState(3);
+    }
+    else if (state = 4) {
+      if (duration < TIMEOUT) {
+        duration++;
+      } else {
+        setState(3);
       }
     }
-    // reverse gear is off
-    else {
-      // previous rear camera state is on
-      if (rearCamState) {
-        rearCamOff();
-        frontCamOn();
-        frontCamDuration = 0;
+  }
+  // reverse gear is unset
+  else {
+    if (state == 1 || state == 2) {
+      if (duration < TIMEOUT) {
+        duration++;
+      } else {
+        setState(0);
       }
-      // previous rear camera state is off
-      else {
-        // previous front camera is on
-        if (frontCamState) {
-          // front camera is on within the duration time
-          if (frontCamDuration <= frontCamDelay) {
-            ++frontCamDuration;
-          }
-          // front camera duration is out of time
-          else {
-            frontCamOff();
-          }
-        }
-      }
+    }
+    else if (state > 2) {
+      setState(1);
+    }
+  }
+
+  // check whether the button is pressed
+  if (isButtonPressed()) {
+    switch (state) {
+      case 0:
+        setState(1);
+        break;
+      case 1:
+        setState(2);
+        break;
+      case 3:
+        setState(4);
+        break;
+      case 4:
+        setState(3);
+        break;
+      case 2:
+      default:
+        setState(0);
+        break;
+    }
+    while (isButtonPressed()) {
+      ;
     }
   }
   delay(5);
 }
 
+/** Change State */
+void setState(int number) {
+  state = number;
+  switch (number) {
+    case 1:
+    case 4:
+      rearCamOff();
+      frontCamOn();
+      duration = 0;
+      break;
+    case 3:
+      frontCamOff();
+      rearCamOn();
+    case 2:
+      duration = 0;
+      break;
+    case 0:
+    default:
+      frontCamOff();
+      rearCamOff();
+      break;
+  }
+}
+
 /** Turn on front camera */
 void frontCamOn() {
-  frontCamState = true;
   digitalWrite(frontCameraPin, HIGH);
 }
 
 /** Turn off front camera */
 void frontCamOff() {
-  frontCamState = false;
   digitalWrite(frontCameraPin, LOW);
 }
 
 /** Turn on rear camera */
 void rearCamOn() {
-  rearCamState = true;
   digitalWrite(rearCameraPin, HIGH);
 }
 
 /** Turn off rear camera */
 void rearCamOff() {
-  rearCamState = false;
   digitalWrite(rearCameraPin, LOW);
 }
 
-/** Change operating mode */
-void changeMode() {
-  mode = ++mode % 4;
+/** Check whether the reverse gear is set */
+bool isReversingSet() {
+  return digitalRead(ctrl1) == HIGH;
+}
 
-  switch (mode) {
-    // auto mode
-    case 0:
-      break;
-    // front camera on
-    case 1:
-      rearCamOff();
-      frontCamOn();
-      break;
-    // rear camera on
-    case 2:
-      frontCamOff();
-      rearCamOn();
-      break;
-    // both cameras off
-    case 3:
-      frontCamOff();
-      rearCamOff();
-      break;
-  }
-  while (true) {
-    if (digitalRead(ctrl2) == LOW)
-      break;
-  }
+/** Check whether the button is pressed */
+bool isButtonPressed() {
+  return digitalRead(ctrl2) == HIGH;
 }
 
