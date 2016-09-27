@@ -43,6 +43,10 @@ note: Handle button changes
     else
         :set state 3;
     endif
+
+    while (Wait until the button is released)
+    endwhile
+
 else (false)
 endif
 @enduml
